@@ -73,6 +73,13 @@ not currently set.
 
 `Code` is optional and defaults to 200
 
+### `res.html(html, [code])`
+
+End the request by sending HTML. `Content-Type` header is set if it is
+not currently set.
+
+`Code` is optional and defaults to 200
+
 License
 -------
 

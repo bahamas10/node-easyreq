@@ -35,10 +35,19 @@ function easyreq(req, res) {
     res.end.apply(res, arguments);
   };
 
+  // send json
   res.json = function json(obj, code) {
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.statusCode = code || 200;
     res.end(JSON.stringify(obj) + '\n');
+  }
+
+  // send html
+  res.html = function html(html, code) {
+    if (!res.getHeader('Content-Type'))
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.statusCode = code || 200;
+    res.end(html);
   }
 }
