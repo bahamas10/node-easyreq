@@ -17,15 +17,13 @@ function easyreq(req, res) {
   req.urlparsed.pathname = path.normalize(req.urlparsed.pathname);
 
   // easily send a redirect
-  res.redirect = function redirect(url, code, headers) {
-    headers = headers || {};
-    headers.Location = url;
-
-    res.writeHead(code || 302, headers);
+  res.redirect = function redirect(url, code) {
+    res.setHeader('Location', url);
+    res.statusCode = 302;
     res.end();
   };
 
-  // shoot a server error
+  // shoot a server error or end with a code
   res.error = function error(code, s) {
     res.statusCode = code || 500;
     res.end(s);
@@ -36,4 +34,11 @@ function easyreq(req, res) {
     res.statusCode = 404;
     res.end.apply(res, arguments);
   };
+
+  res.json = function json(obj, code) {
+    if (!res.getHeader('Content-Type'))
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.statusCode = code || 200;
+    res.end(JSON.stringify(obj) + '\n');
+  }
 }

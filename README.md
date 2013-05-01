@@ -59,14 +59,19 @@ if (!route) return res.notfound();
 Any arguments passed to `res.notfound()` will be applied to the `res.end()`
 function.
 
-### `res.redirect(url, [code], [headers])`
+### `res.redirect(url, [code])`
 
 Send a 302 redirect to the given URL and end the connection.
 
 The optional second argument is the code to send, defaults to `302`
 
-The optional third argument is an object to pass as headers to
-`res.writeHead()`, defaults to `{}`.
+### `res.json(obj, [code])`
+
+End the request by sending an object as JSON.  `obj` is automatically stringified
+with a `\n` appended to the output, the `Content-Type` header is set if it is
+not currently set.
+
+`Code` is optional and defaults to 200
 
 License
 -------
