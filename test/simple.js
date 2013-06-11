@@ -6,10 +6,9 @@ var easyreq = require('../');
 var host = 'localhost';
 var port = 9128;
 
-var CHECKS = 3;
+var CHECKS = 5;
 
-var server = http.createServer(onrequest);
-server.listen(port, host, started);
+http.createServer(onrequest).listen(port, host, started);
 
 function onrequest(req, res) {
   easyreq(req, res);
@@ -23,6 +22,12 @@ function onrequest(req, res) {
       break;
     case '/error':
       res.error();
+      break;
+    case '/json':
+      res.json({key:'value'});
+      break;
+    case '/html':
+      res.html('<html></html>');
       break;
     default:
       res.notfound('no route found');
@@ -54,6 +59,23 @@ function started() {
     console.log('GET /error');
     console.log('-> statusCode = %d', res.statusCode);
     assert(res.statusCode === 500);
+    if (++i >= CHECKS) process.exit(0);
+  }).end();;
+
+  http.request('http://localhost:9128/html', function(res) {
+    console.log('GET /html');
+    console.log('-> statusCode = %d', res.statusCode);
+    assert(res.statusCode === 200);
+    console.log('-> Content-Length = %d', res.headers['content-length']);
+    assert(res.headers['content-length'], '<html></html>'.length);
+    if (++i >= CHECKS) process.exit(0);
+  }).end();;
+  http.request('http://localhost:9128/json', function(res) {
+    console.log('GET /json');
+    console.log('-> statusCode = %d', res.statusCode);
+    assert(res.statusCode === 200);
+    console.log('-> Content-Length = %d', res.headers['content-length']);
+    assert(res.headers['content-length'], (JSON.stringify({key:'value'}) + '\n').length);
     if (++i >= CHECKS) process.exit(0);
   }).end();;
 }

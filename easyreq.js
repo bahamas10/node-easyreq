@@ -37,16 +37,23 @@ function easyreq(req, res) {
 
   // send json
   res.json = function json(obj, code) {
+    var content = JSON.stringify(obj) + '\n';
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    if (!res.getHeader('Content-Length'))
+      res.setHeader('Content-Length', content.length);
+
     res.statusCode = code || 200;
-    res.end(JSON.stringify(obj) + '\n');
+    res.end(content);
   }
 
   // send html
   res.html = function html(html, code) {
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    if (!res.getHeader('Content-Length'))
+      res.setHeader('Content-Length', html.length);
+
     res.statusCode = code || 200;
     res.end(html);
   }
