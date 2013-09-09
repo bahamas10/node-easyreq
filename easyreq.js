@@ -41,7 +41,7 @@ function easyreq(req, res) {
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
     if (!res.getHeader('Content-Length'))
-      res.setHeader('Content-Length', content.length);
+      res.setHeader('Content-Length', Buffer.byteLength(content, 'utf-8'));
 
     res.statusCode = code || 200;
     res.end(content);
@@ -52,7 +52,7 @@ function easyreq(req, res) {
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
     if (!res.getHeader('Content-Length'))
-      res.setHeader('Content-Length', html.length);
+      res.setHeader('Content-Length', Buffer.byteLength(html, 'utf-8'));
 
     res.statusCode = code || 200;
     res.end(html);
