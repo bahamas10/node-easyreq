@@ -67,9 +67,8 @@ The optional second argument is the code to send, defaults to `302`
 
 ### `res.json(obj, [code])`
 
-End the request by sending an object as JSON.  `obj` is automatically stringified
-with a `\n` appended to the output, the `Content-Type` header is set if it is
-not currently set.
+End the request by sending an object as JSON.  `obj` is automatically stringified,
+the `Content-Type` header is set if it is not currently set.
 
 `Code` is optional and defaults to 200
 
