@@ -17,9 +17,9 @@ function easyreq(req, res) {
   req.urlparsed.pathname = path.normalize(req.urlparsed.pathname);
 
   // easily send a redirect
-  res.redirect = function redirect(url, code) {
-    res.setHeader('Location', url);
-    res.statusCode = 302;
+  res.redirect = function redirect(uri, code) {
+    res.setHeader('Location', uri);
+    res.statusCode = code || 302;
     res.end();
   };
 
@@ -37,7 +37,10 @@ function easyreq(req, res) {
 
   // send json
   res.json = function json(obj, code) {
-    var content = JSON.stringify(obj) + '\n';
+    var content = null;
+    try {
+      content = JSON.stringify(obj);
+    } catch (e) {}
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
     if (!res.getHeader('Content-Length'))
@@ -45,16 +48,16 @@ function easyreq(req, res) {
 
     res.statusCode = code || 200;
     res.end(content);
-  }
+  };
 
   // send html
-  res.html = function html(html, code) {
+  res.html = function html(html_, code) {
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
     if (!res.getHeader('Content-Length'))
-      res.setHeader('Content-Length', Buffer.byteLength(html, 'utf-8'));
+      res.setHeader('Content-Length', Buffer.byteLength(html_, 'utf-8'));
 
     res.statusCode = code || 200;
-    res.end(html);
-  }
+    res.end(html_);
+  };
 }
