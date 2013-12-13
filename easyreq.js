@@ -37,7 +37,7 @@ function easyreq(req, res) {
 
   // send json
   res.json = function json(obj, code) {
-    var content = null;
+    var content = 'null';
     try {
       content = JSON.stringify(obj);
     } catch (e) {}
