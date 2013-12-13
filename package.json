@@ -1,6 +1,6 @@
 {
   "name": "easyreq",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Add convenience function to the req and res objects of an http/https server",
   "author": "Dave Eddy <dave@daveeddy.com> (http://www.daveeddy.com)",
   "main": "./easyreq.js",
