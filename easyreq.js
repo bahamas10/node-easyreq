@@ -6,15 +6,19 @@
  * License: MIT
  */
 
+var http = require('http');
 var path = require('path');
 var url = require('url');
+
+var cleanse = require('cleanse');
 
 module.exports = easyreq;
 
 function easyreq(req, res) {
-  // parse the URL and normalize the pathname
+  // parse the URL, normalize the pathname and cleanse the querystring
   req.urlparsed = url.parse(req.url, true);
-  req.urlparsed.pathname = path.normalize(req.urlparsed.pathname);
+  req.urlparsed.normalizedpathname = path.normalize(req.urlparsed.pathname);
+  cleanse(req.urlparsed.query);
 
   // easily send a redirect
   res.redirect = function redirect(uri, code) {
@@ -25,22 +29,26 @@ function easyreq(req, res) {
 
   // shoot a server error or end with a code
   res.error = function error(code, s) {
-    res.statusCode = code || 500;
-    res.end(s);
+    if (typeof code !== 'number') {
+      s = code;
+      code = 500;
+    }
+    res.statusCode = code;
+    res.end(s || http.STATUS_CODES[code]);
   };
 
   // 404 to the user
-  res.notfound = function notfound() {
+  res.notfound = function notfound(s) {
     res.statusCode = 404;
-    res.end.apply(res, arguments);
+    if (s)
+      res.end.apply(res, arguments);
+    else
+      res.end(http.STATUS_CODES[res.statusCode]);
   };
 
   // send json
   res.json = function json(obj, code) {
-    var content = 'null';
-    try {
-      content = JSON.stringify(obj);
-    } catch (e) {}
+    var content = JSON.stringify(obj);
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
     if (!res.getHeader('Content-Length'))

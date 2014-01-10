@@ -9,5 +9,7 @@
   },
   "repository": "git://github.com/bahamas10/node-easyreq.git",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "cleanse": "0.0.3"
+  }
 }
