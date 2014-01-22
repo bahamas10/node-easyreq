@@ -21,33 +21,38 @@ function easyreq(req, res) {
   cleanse(req.urlparsed.query);
 
   // easily send a redirect
-  res.redirect = function redirect(uri, code) {
+  res.redirect = function easyreq_redirect(uri, code) {
     res.setHeader('Location', uri);
     res.statusCode = code || 302;
-    res.end();
+    res.end(http.STATUS_CODES[res.statusCode] + '\n');
   };
 
   // shoot a server error or end with a code
-  res.error = function error(code, s) {
+  res.error = function easyreq_error(code, s) {
     if (typeof code !== 'number') {
       s = code;
       code = 500;
     }
     res.statusCode = code;
-    res.end(s || http.STATUS_CODES[code]);
+
+    if (s !== undefined)
+      res.end(s);
+    else
+      res.end(http.STATUS_CODES[res.statusCode] + '\n');
   };
 
   // 404 to the user
-  res.notfound = function notfound(s) {
+  res.notfound = function easyreq_notfound(s) {
     res.statusCode = 404;
-    if (s)
+
+    if (s !== undefined)
       res.end.apply(res, arguments);
     else
-      res.end(http.STATUS_CODES[res.statusCode]);
+      res.end(http.STATUS_CODES[res.statusCode] + '\n');
   };
 
   // send json
-  res.json = function json(obj, code) {
+  res.json = function easyreq_json(obj, code) {
     var content = JSON.stringify(obj);
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -60,7 +65,7 @@ function easyreq(req, res) {
   };
 
   // send html
-  res.html = function html(html_, code) {
+  res.html = function easyreq_html(html_, code) {
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
     if (!res.getHeader('Content-Length'))

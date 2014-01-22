@@ -63,7 +63,14 @@ function started() {
     assert(res.statusCode === 302);
     console.log('-> location header = %s', res.headers.location);
     assert(res.headers.location === 'http://google.com');
-    checkdone();
+    var data = '';
+    res.setEncoding('utf-8');
+    res.on('data', function(d) { data += d; });
+    res.on('end', function() {
+      console.log('(GET /notfound) body = "%s"', data);
+      assert(data === http.STATUS_CODES[302] + '\n');
+      checkdone();
+    });
   }).end();
 
   http.request('http://localhost:9128/notfound', function(res) {
@@ -75,7 +82,7 @@ function started() {
     res.on('data', function(d) { data += d; });
     res.on('end', function() {
       console.log('(GET /notfound) body = "%s"', data);
-      assert(data === http.STATUS_CODES[404]);
+      assert(data === http.STATUS_CODES[404] + '\n');
       checkdone();
     });
   }).end();
@@ -103,7 +110,7 @@ function started() {
     res.on('data', function(d) { data += d; });
     res.on('end', function() {
       console.log('(GET /error) body = "%s"', data);
-      assert(data === http.STATUS_CODES[500]);
+      assert(data === http.STATUS_CODES[500] + '\n');
       checkdone();
     });
   }).end();
@@ -117,7 +124,7 @@ function started() {
     res.on('data', function(d) { data += d; });
     res.on('end', function() {
       console.log('(GET /errorcode) body = "%s"', data);
-      assert(data === http.STATUS_CODES[501]);
+      assert(data === http.STATUS_CODES[501] + '\n');
       checkdone();
     });
   }).end();
