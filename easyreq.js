@@ -55,7 +55,7 @@ function easyreq(req, res) {
   res.json = function easyreq_json(obj, code, pretty) {
     var content;
     if (pretty)
-      content = JSON.stringify(obj, null, 2);
+      content = JSON.stringify(obj, null, 2) + '\n';
     else
       content = JSON.stringify(obj);
     if (!res.getHeader('Content-Type'))
