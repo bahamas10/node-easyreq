@@ -89,7 +89,7 @@ Send a 302 redirect to the given URL and end the connection.
 
 The optional second argument is the code to send, defaults to `302`
 
-### `res.json(obj, [code])`
+### `res.json(obj, [code], [pretty])`
 
 End the request by sending an object as JSON.  `obj` is automatically stringified,
 the `Content-Type` header is set if it is not currently set.
