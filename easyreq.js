@@ -52,8 +52,12 @@ function easyreq(req, res) {
   };
 
   // send json
-  res.json = function easyreq_json(obj, code) {
-    var content = JSON.stringify(obj);
+  res.json = function easyreq_json(obj, code, pretty) {
+    var content;
+    if (pretty)
+      content = JSON.stringify(obj, null, 2);
+    else
+      content = JSON.stringify(obj);
     if (!res.getHeader('Content-Type'))
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
     if (!res.getHeader('Content-Length'))
